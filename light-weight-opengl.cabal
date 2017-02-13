@@ -17,8 +17,10 @@ library
   hs-source-dirs:      src
   exposed-modules:     Graphics.LWGL
   other-modules:       Graphics.LWGL.Api
+                       Graphics.LWGL.Shader
                        Graphics.LWGL.Types
   build-depends:       base >= 4.7 && < 5
+                     , bytestring
                      , linear
                      , OpenGLRaw
   default-language:    Haskell2010
