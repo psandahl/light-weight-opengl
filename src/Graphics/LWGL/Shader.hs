@@ -41,6 +41,24 @@ compileShader (shaderType, filePath) = do
 
         Left e -> return $ Left (show e)
 
+-- | Link shaders to a program.
+linkShaders :: [GLuint] -> IO (Either String Program)
+linkShaders shaders = do
+    handle <- GL.glCreateProgram
+    mapM_ (GL.glAttachShader handle) shaders
+    GL.glLinkProgram handle
+    status <- getShaderStatus handle GL.GL_LINK_STATUS
+    if status == GL.GL_TRUE
+        then do
+            mapM_ (GL.glDetachShader handle) shaders
+            mapM_ GL.glDeleteShader shaders
+            return $ Right (Program handle)
+        else do
+            errLog <- getInfoLog handle GL.glGetProgramInfoLog
+            mapM_ GL.glDeleteShader shaders
+            GL.glDeleteProgram handle
+            return $ Left errLog
+
 setShaderSource :: GLuint -> ByteString -> IO ()
 setShaderSource handle src = undefined
     BS.useAsCString src $ \cstring ->
