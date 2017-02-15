@@ -20,8 +20,13 @@ import           Prelude               hiding (toEnum)
 
 import           Graphics.LWGL.Types
 
+-- | Compile and link the provided shader source files to a 'Program'.
 loadShaders :: [(ShaderType, FilePath)] -> IO (Either String Program)
-loadShaders = undefined
+loadShaders files = do
+    eShaders <- sequence <$> mapM compileShader files
+    case eShaders of
+        Right shaders -> linkShaders shaders
+        Left err      -> return $ Left err
 
 -- | Compile a single shader.
 compileShader :: (ShaderType, FilePath) -> IO (Either String GLuint)
