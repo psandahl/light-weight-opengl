@@ -37,7 +37,8 @@ compileShader (shaderType, filePath) = do
             handle <- GL.glCreateShader $ toEnum shaderType
             setShaderSource handle src
             GL.glCompileShader handle
-            status <- getShaderStatus handle GL.GL_COMPILE_STATUS
+            status <- getShaderStatus $
+                GL.glGetShaderiv handle GL.GL_COMPILE_STATUS
             if status == GL.GL_TRUE
                 then return $ Right handle
                 else do
@@ -52,7 +53,7 @@ linkShaders shaders = do
     handle <- GL.glCreateProgram
     mapM_ (GL.glAttachShader handle) shaders
     GL.glLinkProgram handle
-    status <- getShaderStatus handle GL.GL_LINK_STATUS
+    status <- getShaderStatus $ GL.glGetProgramiv handle GL.GL_LINK_STATUS
     if status == GL.GL_TRUE
         then do
             mapM_ (GL.glDetachShader handle) shaders
@@ -65,15 +66,15 @@ linkShaders shaders = do
             return $ Left errLog
 
 setShaderSource :: GLuint -> ByteString -> IO ()
-setShaderSource handle src = undefined
+setShaderSource handle src =
     BS.useAsCString src $ \cstring ->
         with cstring $ \ptr ->
             GL.glShaderSource handle 1 ptr nullPtr
 
-getShaderStatus :: GLuint -> GLenum -> IO GLboolean
-getShaderStatus handle shaderType =
+getShaderStatus :: (Ptr GLint -> IO ()) -> IO GLboolean
+getShaderStatus getter =
     with 0 $ \ptr -> do
-        GL.glGetShaderiv handle shaderType ptr
+        getter ptr
         v <- peek ptr
         if v == 0
             then return GL.GL_FALSE

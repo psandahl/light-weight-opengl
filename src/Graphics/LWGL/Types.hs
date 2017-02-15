@@ -26,6 +26,7 @@ module Graphics.LWGL.Types
     , GLchar
     , GLenum
     , GLfloat
+    , GLint
     , GLsizei
     , GLuint
     , combineBits
