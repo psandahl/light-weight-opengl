@@ -9,9 +9,9 @@
 --
 -- A light weight convenience layer on top of the OpenGLRaw library.
 module Graphics.LWGL
-    ( module Graphics.LWGL.Api
-    , module Graphics.LWGL.Types
+    ( module LWGL
     ) where
 
-import           Graphics.LWGL.Api
-import           Graphics.LWGL.Types
+import           Graphics.LWGL.Api    as LWGL
+import           Graphics.LWGL.Shader as LWGL
+import           Graphics.LWGL.Types  as LWGL
