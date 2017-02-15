@@ -8,6 +8,7 @@
 -- Language: Haskell2010
 module Graphics.LWGL.Api
     ( glBindBuffer
+    , glBindVertexArray
     , glClearColor
     , glClear
     , glBufferData
@@ -16,6 +17,7 @@ module Graphics.LWGL.Api
     , glDrawArrays
     , glEnableVertexAttribArray
     , glGenBuffers
+    , glGenVertexArray
     , glUseProgram
     , glVertexAttribPointer
     ) where
@@ -34,6 +36,13 @@ import           Graphics.LWGL.Types
 glBindBuffer :: BufferTarget -> BufferObject -> IO ()
 glBindBuffer bufferTarget (BufferObject bufferObject) =
     GL.glBindBuffer (toEnum bufferTarget) bufferObject
+
+-- | Bind a vertex array object.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml>
+glBindVertexArray :: VertexArrayObject -> IO ()
+glBindVertexArray (VertexArrayObject vertexArrayObject) =
+    GL.glBindVertexArray vertexArrayObject
 
 -- | Specify clear values for the color buffers.
 --
@@ -94,6 +103,16 @@ glGenBuffers num = do
     withArray array $ \ptr -> do
         GL.glGenBuffers (fromIntegral num) ptr
         map BufferObject <$> peekArray num ptr
+
+-- | Generate vertex array object names.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml>
+glGenVertexArray :: Int -> IO [VertexArrayObject]
+glGenVertexArray num = do
+    let array = replicate num 0
+    withArray array $ \ptr -> do
+        GL.glGenVertexArrays (fromIntegral num) ptr
+        map VertexArrayObject <$> peekArray num ptr
 
 -- | Installs a program object as part of current rendering state.
 --

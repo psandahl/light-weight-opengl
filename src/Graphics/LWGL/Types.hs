@@ -16,6 +16,7 @@ module Graphics.LWGL.Types
     , ShaderType (..)
     , PrimitiveType (..)
     , Program (..)
+    , VertexArrayObject (..)
     , VertexAttribPointerType (..)
     , ToBitfield (..)
     , ToEnum (..)
@@ -187,6 +188,10 @@ instance ToEnum PrimitiveType where
 
 -- | Representation of a linked shader program.
 newtype Program = Program GLuint
+    deriving Show
+
+-- | Vertex array object.
+newtype VertexArrayObject = VertexArrayObject GLuint
     deriving Show
 
 -- | Data types for attribute values.
