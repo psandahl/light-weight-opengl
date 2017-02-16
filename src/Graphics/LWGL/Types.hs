@@ -16,6 +16,8 @@ module Graphics.LWGL.Types
     , ShaderType (..)
     , PrimitiveType (..)
     , Program (..)
+    , Texture (..)
+    , TextureTarget (..)
     , VertexArrayObject (..)
     , VertexAttribPointerType (..)
     , ToBitfield (..)
@@ -190,6 +192,36 @@ instance ToEnum PrimitiveType where
 -- | Representation of a linked shader program.
 newtype Program = Program GLuint
     deriving Show
+
+-- | Representation of a texture.
+newtype Texture = Texture GLuint
+    deriving Show
+
+-- | Enumeration of texture targets.
+data TextureTarget
+    = Texture1D
+    | Texture2D
+    | Texture3D
+    | Texture1DArray
+    | Texture2DArray
+    | TextureRectangle
+    | TextureCubeMap
+    | TextureCubeMapArray
+    | Texture2DMultisample
+    | Texture2DMultisampleArray
+    deriving Show
+
+instance ToEnum TextureTarget where
+    toEnum Texture1D                 = GL.GL_TEXTURE_1D
+    toEnum Texture2D                 = GL.GL_TEXTURE_2D
+    toEnum Texture3D                 = GL.GL_TEXTURE_3D
+    toEnum Texture1DArray            = GL.GL_TEXTURE_1D_ARRAY
+    toEnum Texture2DArray            = GL.GL_TEXTURE_2D_ARRAY
+    toEnum TextureRectangle          = GL.GL_TEXTURE_RECTANGLE
+    toEnum TextureCubeMap            = GL.GL_TEXTURE_CUBE_MAP
+    toEnum TextureCubeMapArray       = GL.GL_TEXTURE_CUBE_MAP_ARRAY
+    toEnum Texture2DMultisample      = GL.GL_TEXTURE_2D_MULTISAMPLE
+    toEnum Texture2DMultisampleArray = GL.GL_TEXTURE_2D_MULTISAMPLE_ARRAY
 
 -- | Vertex array object.
 newtype VertexArrayObject = VertexArrayObject GLuint

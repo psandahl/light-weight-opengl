@@ -17,6 +17,7 @@ module Graphics.LWGL.Api
     , glDrawArrays
     , glEnableVertexAttribArray
     , glGenBuffers
+    , glGenTextures
     , glGenVertexArray
     , glUseProgram
     , glVertexAttribPointer
@@ -103,6 +104,16 @@ glGenBuffers num = do
     withArray array $ \ptr -> do
         GL.glGenBuffers (fromIntegral num) ptr
         map BufferObject <$> peekArray num ptr
+
+-- | Generate texture names.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenTextures.xhtml>
+glGenTextures :: Int -> IO [Texture]
+glGenTextures num = do
+    let array = replicate num 0
+    withArray array $ \ptr -> do
+        GL.glGenTextures (fromIntegral num) ptr
+        map Texture <$> peekArray num ptr
 
 -- | Generate vertex array object names.
 --
