@@ -7,7 +7,9 @@
 -- Portability: portable
 -- Language: Haskell2010
 module Graphics.LWGL.Api
-    ( glBindBuffer
+    ( glActiveTexture
+    , glBindBuffer
+    , glBindTexture
     , glBindVertexArray
     , glClearColor
     , glClear
@@ -19,6 +21,8 @@ module Graphics.LWGL.Api
     , glGenBuffers
     , glGenTextures
     , glGenVertexArray
+    , glTexImage2D
+    , glTexParameteri
     , glUseProgram
     , glVertexAttribPointer
     ) where
@@ -31,12 +35,25 @@ import           Prelude             hiding (toEnum)
 
 import           Graphics.LWGL.Types
 
+-- | Select active texture unit.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glActiveTexture.xhtml>
+glActiveTexture :: TextureUnit -> IO ()
+glActiveTexture = GL.glActiveTexture . toEnum
+
 -- | Bind a named buffer object
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml>
 glBindBuffer :: BufferTarget -> BufferObject -> IO ()
 glBindBuffer bufferTarget (BufferObject bufferObject) =
     GL.glBindBuffer (toEnum bufferTarget) bufferObject
+
+-- | Bind a named texture to a texturing target.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindTexture.xhtml>
+glBindTexture :: TextureTarget -> Texture -> IO ()
+glBindTexture textureTarget (Texture texture) =
+    GL.glBindTexture (toEnum textureTarget) texture
 
 -- | Bind a vertex array object.
 --
@@ -124,6 +141,33 @@ glGenVertexArray num = do
     withArray array $ \ptr -> do
         GL.glGenVertexArrays (fromIntegral num) ptr
         map VertexArrayObject <$> peekArray num ptr
+
+-- | Specify a two-dimensional texture image.
+--
+-- | Note: No border parameter. Always zero.
+-- | See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml>
+glTexImage2D :: TextureTarget
+             -> ImageDetailLevel
+             -> ImageComponentCount
+             -> Width
+             -> Height
+             -> PixelFormat
+             -> PixelType
+             -> Ptr a
+             -> IO ()
+glTexImage2D textureTarget detailLevel componentCount
+             width height format type_ ptr =
+    GL.glTexImage2D (toEnum textureTarget) detailLevel (toInt componentCount)
+                    width height 0 (toEnum format) (toEnum type_) ptr
+
+-- | Set texture parameters.
+--
+-- | See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexParameter.xhtml>
+glTexParameteri :: TextureTarget -> TextureParameterName
+                -> TextureParameterValue -> IO ()
+glTexParameteri textureTarget parameterName parameterValue =
+    GL.glTexParameteri (toEnum textureTarget) (toEnum parameterName)
+                       (toInt parameterValue)
 
 -- | Installs a program object as part of current rendering state.
 --

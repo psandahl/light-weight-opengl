@@ -12,14 +12,23 @@ module Graphics.LWGL.Types
     , BufferUsage (..)
     , ClearBufferMask (..)
     , ComponentCount (..)
+    , Height
+    , ImageDetailLevel
+    , ImageComponentCount (..)
     , Location (..)
     , ShaderType (..)
+    , PixelFormat (..)
+    , PixelType (..)
     , PrimitiveType (..)
     , Program (..)
     , Texture (..)
+    , TextureParameterName (..)
+    , TextureParameterValue (..)
     , TextureTarget (..)
+    , TextureUnit (..)
     , VertexArrayObject (..)
     , VertexAttribPointerType (..)
+    , Width
     , ToBitfield (..)
     , ToEnum (..)
     , ToInt (..)
@@ -57,7 +66,7 @@ class ToInt a where
 newtype BufferObject = BufferObject GLuint
     deriving Show
 
--- | Buffer target values.
+-- | Buffer target values for binding.
 data BufferTarget
     = ArrayBuffer
     | AtomicCounterBuffer
@@ -139,6 +148,30 @@ instance ToInt ComponentCount where
     toInt Three = 3
     toInt Four  = 4
 
+-- | Image height.
+type Height = GLsizei
+
+-- | Detail level of image.
+type ImageDetailLevel = GLint
+
+-- | Count of image components.
+data ImageComponentCount
+    = ImgDepthComponent
+    | ImgDepthStencil
+    | ImgRed
+    | ImgRG
+    | ImgRGB
+    | ImgRGBA
+    deriving Show
+
+instance ToInt ImageComponentCount where
+    toInt ImgDepthComponent = fromIntegral GL.GL_DEPTH_COMPONENT
+    toInt ImgDepthStencil   = fromIntegral GL.GL_DEPTH_STENCIL
+    toInt ImgRed            = fromIntegral GL.GL_RED
+    toInt ImgRG             = fromIntegral GL.GL_RG
+    toInt ImgRGB            = fromIntegral GL.GL_RGB
+    toInt ImgRGBA           = fromIntegral GL.GL_RGBA
+
 -- | Shader attribute location.
 newtype Location = Location GLuint
     deriving Show
@@ -160,6 +193,40 @@ instance ToEnum ShaderType where
     toEnum TessEvaluationShader = GL.GL_TESS_EVALUATION_SHADER
     toEnum GeometryShader       = GL.GL_GEOMETRY_SHADER
     toEnum FragmentShader       = GL.GL_FRAGMENT_SHADER
+
+-- | Pixel format enumeration.
+data PixelFormat
+    = PxlRed
+    | PxlRG
+    | PxlRGB
+    | PxlBGR
+    | PxlRGBA
+    | PxlBGRA
+    deriving Show
+
+instance ToEnum PixelFormat where
+    toEnum PxlRed  = GL.GL_RED
+    toEnum PxlRG   = GL.GL_RG
+    toEnum PxlRGB  = GL.GL_RGB
+    toEnum PxlBGR  = GL.GL_BGR
+    toEnum PxlRGBA = GL.GL_RGBA
+    toEnum PxlBGRA = GL.GL_BGRA
+
+-- | Pixel type enumeration.
+data PixelType
+    = PxlUnsignedByte
+    | PxlByte
+    | PxlUnsignedShort
+    | PxlShort
+    | PxlFloat
+    deriving Show
+
+instance ToEnum PixelType where
+    toEnum PxlUnsignedByte  = GL.GL_UNSIGNED_BYTE
+    toEnum PxlByte          = GL.GL_BYTE
+    toEnum PxlUnsignedShort = GL.GL_UNSIGNED_SHORT
+    toEnum PxlShort         = GL.GL_SHORT
+    toEnum PxlFloat         = GL.GL_FLOAT
 
 -- | Enumeration of primitive render types.
 data PrimitiveType
@@ -196,6 +263,38 @@ newtype Program = Program GLuint
 -- | Representation of a texture.
 newtype Texture = Texture GLuint
     deriving Show
+
+-- | Enumeration of texture parameter names.
+data TextureParameterName
+    = TextureWrapS
+    | TextureWrapT
+    | TextureMagFilter
+    | TextureMinFilter
+    deriving Show
+
+instance ToEnum TextureParameterName where
+    toEnum TextureWrapS     = GL.GL_TEXTURE_WRAP_S
+    toEnum TextureWrapT     = GL.GL_TEXTURE_WRAP_T
+    toEnum TextureMagFilter = GL.GL_TEXTURE_MAG_FILTER
+    toEnum TextureMinFilter = GL.GL_TEXTURE_MIN_FILTER
+
+data TextureParameterValue
+    = GLLinear
+    | GLNearest
+    | GLRepeat
+    deriving Show
+
+instance ToInt TextureParameterValue where
+    toInt GLLinear  = fromIntegral GL.GL_LINEAR
+    toInt GLNearest = fromIntegral GL.GL_LINEAR
+    toInt GLRepeat  = fromIntegral GL.GL_REPEAT
+
+-- | Representation of a texture unit.
+newtype TextureUnit = TextureUnit GLuint
+    deriving Show
+
+instance ToEnum TextureUnit where
+    toEnum (TextureUnit unit) = GL.GL_TEXTURE0 + unit
 
 -- | Enumeration of texture targets.
 data TextureTarget
@@ -252,6 +351,9 @@ instance ToEnum VertexAttribPointerType where
     toEnum GLFloat         = GL.GL_FLOAT
     toEnum GLDouble        = GL.GL_DOUBLE
     toEnum GLFixed         = GL.GL_FIXED
+
+-- | Image width.
+type Width = GLsizei
 
 combineBits :: ToBitfield a => [a] -> GLbitfield
 combineBits = foldl' (\a v -> a .|. toBitfield v) zeroBits
