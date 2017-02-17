@@ -16,3 +16,4 @@ import           Graphics.LWGL.Api     as LWGL
 import           Graphics.LWGL.Shader  as LWGL
 import           Graphics.LWGL.Texture as LWGL
 import           Graphics.LWGL.Types   as LWGL
+import           Graphics.LWGL.Vertex  as LWGL

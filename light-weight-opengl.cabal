@@ -20,6 +20,7 @@ library
                        Graphics.LWGL.Shader
                        Graphics.LWGL.Texture
                        Graphics.LWGL.Types
+                       Graphics.LWGL.Vertex
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , JuicyPixels
