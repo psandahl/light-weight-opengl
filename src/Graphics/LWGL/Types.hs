@@ -7,7 +7,8 @@
 -- Portability: portable
 -- Language: Haskell2010
 module Graphics.LWGL.Types
-    ( BufferObject (..)
+    ( AttributeIndex (..)
+    , BufferObject (..)
     , BufferTarget (..)
     , BufferUsage (..)
     , ClearBufferMask (..)
@@ -61,6 +62,10 @@ class ToEnum a where
 -- | Class that help types to expose int values.
 class ToInt a where
     toInt :: a -> GLint
+
+-- | Attribute index.
+newtype AttributeIndex = AttributeIndex GLuint
+    deriving Show
 
 -- | OpenGL buffer object.
 newtype BufferObject = BufferObject GLuint
@@ -173,7 +178,7 @@ instance ToInt ImageComponentCount where
     toInt ImgRGBA           = fromIntegral GL.GL_RGBA
 
 -- | Shader attribute location.
-newtype Location = Location GLuint
+newtype Location = Location GLint
     deriving Show
 
 data ShaderType

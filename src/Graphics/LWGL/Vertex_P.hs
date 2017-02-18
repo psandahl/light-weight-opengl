@@ -41,7 +41,7 @@ makeVertexArrayObject bufferUsage vertices = do
     glBufferDataList ArrayBuffer vertices bufferUsage
 
     -- Setting position - three components of type GLfloat
-    glEnableVertexAttribArray (Location 0)
-    glVertexAttribPointer (Location 0) Three GLFloat False 0 0
+    glEnableVertexAttribArray (AttributeIndex 0)
+    glVertexAttribPointer (AttributeIndex 0) Three GLFloat False 0 0
 
     return vao

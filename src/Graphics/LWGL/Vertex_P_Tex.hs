@@ -49,12 +49,12 @@ makeVertexArrayObject bufferUsage vertices = do
     let v = head vertices
 
     -- Setting position - three components of type GLfloat
-    glEnableVertexAttribArray (Location 0)
-    glVertexAttribPointer (Location 0) Three GLFloat False (sizeOf v) 0
+    glEnableVertexAttribArray (AttributeIndex 0)
+    glVertexAttribPointer (AttributeIndex 0) Three GLFloat False (sizeOf v) 0
 
     -- Setting texCoord - two components of type GLfloat.
-    glEnableVertexAttribArray (Location 1)
-    glVertexAttribPointer (Location 1) Two GLFloat False
+    glEnableVertexAttribArray (AttributeIndex 1)
+    glVertexAttribPointer (AttributeIndex 1) Two GLFloat False
                           (sizeOf v) (sizeOf $ position v)
 
     return vao

@@ -94,9 +94,9 @@ glBufferDataList bufferTarget xs bufferUsage =
 -- | Disable a generic vertex attribute array.
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml>
-glDisableVertexAttribArray :: Location -> IO ()
-glDisableVertexAttribArray (Location location) =
-    GL.glDisableVertexAttribArray location
+glDisableVertexAttribArray :: AttributeIndex -> IO ()
+glDisableVertexAttribArray (AttributeIndex index) =
+    GL.glDisableVertexAttribArray index
 
 -- | Render primitives from array data.
 --
@@ -108,9 +108,9 @@ glDrawArrays primitiveType first count =
 -- | Enable a generic vertex attribute array.
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml>
-glEnableVertexAttribArray :: Location -> IO ()
-glEnableVertexAttribArray (Location location) =
-    GL.glEnableVertexAttribArray location
+glEnableVertexAttribArray :: AttributeIndex -> IO ()
+glEnableVertexAttribArray (AttributeIndex index) =
+    GL.glEnableVertexAttribArray index
 
 -- | Generate buffer object names
 --
@@ -178,15 +178,15 @@ glUseProgram (Program program) = GL.glUseProgram program
 -- | Define an array of generic vertex attribute data.
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml>
-glVertexAttribPointer :: Location
+glVertexAttribPointer :: AttributeIndex
                       -> ComponentCount
                       -> VertexAttribPointerType
                       -> Bool
                       -> Int
                       -> Int -- This is byte index into buffer
                       -> IO ()
-glVertexAttribPointer (Location location) count pointerType
+glVertexAttribPointer (AttributeIndex index) count pointerType
                       normalize stride offset = do
     let pointer = nullPtr `plusPtr` offset
-    GL.glVertexAttribPointer location (toInt count) (toEnum pointerType)
+    GL.glVertexAttribPointer index (toInt count) (toEnum pointerType)
                              (toBoolean normalize) (fromIntegral stride) pointer
