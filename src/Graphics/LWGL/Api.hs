@@ -21,8 +21,10 @@ module Graphics.LWGL.Api
     , glGenBuffers
     , glGenTextures
     , glGenVertexArray
+    , glGetUniformLocation
     , glTexImage2D
     , glTexParameteri
+    , glUniform1i
     , glUseProgram
     , glVertexAttribPointer
     ) where
@@ -30,6 +32,7 @@ module Graphics.LWGL.Api
 import           Control.Monad       (unless)
 import           Foreign             (Ptr, Storable, nullPtr, peekArray,
                                       plusPtr, sizeOf, withArray)
+import           Foreign.C           (withCString)
 import qualified Graphics.GL         as GL
 import           Prelude             hiding (toEnum)
 
@@ -142,6 +145,14 @@ glGenVertexArray num = do
         GL.glGenVertexArrays (fromIntegral num) ptr
         map VertexArrayObject <$> peekArray num ptr
 
+-- | Returns the location of a uniform variable.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetUniformLocation.xhtml>
+glGetUniformLocation :: Program -> String -> IO Location
+glGetUniformLocation (Program program) name =
+    withCString name $ \cstring ->
+        Location <$> GL.glGetUniformLocation program cstring
+
 -- | Specify a two-dimensional texture image.
 --
 -- | Note: No border parameter. Always zero.
@@ -168,6 +179,12 @@ glTexParameteri :: TextureTarget -> TextureParameterName
 glTexParameteri textureTarget parameterName parameterValue =
     GL.glTexParameteri (toEnum textureTarget) (toEnum parameterName)
                        (toInt parameterValue)
+
+-- | Specify the value of a uniform variable for the current program object.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml>
+glUniform1i :: Location -> Int -> IO ()
+glUniform1i (Location location) = GL.glUniform1i location . fromIntegral
 
 -- | Installs a program object as part of current rendering state.
 --
