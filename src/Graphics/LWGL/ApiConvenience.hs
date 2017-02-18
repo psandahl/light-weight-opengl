@@ -8,10 +8,13 @@
 -- Language: Haskell2010
 module Graphics.LWGL.ApiConvenience
     ( bufferDataList
+    , setMatrix4
     ) where
 
 import           Control.Monad       (unless)
-import           Foreign             (Storable (sizeOf), withArray)
+import           Foreign             (Storable (sizeOf), castPtr, with,
+                                      withArray)
+import           Linear              (M44)
 
 import           Graphics.LWGL.Api
 import           Graphics.LWGL.Types
@@ -25,3 +28,8 @@ bufferDataList bufferTarget xs bufferUsage =
                 itemSize = sizeOf first
                 storageSize = itemSize * length xs
             glBufferData bufferTarget storageSize ptr bufferUsage
+
+-- | Set a M44 uniform value.
+setMatrix4 :: Location -> M44 GLfloat -> IO ()
+setMatrix4 location matrix =
+    with matrix $ glUniformMatrix4fv location 1 True . castPtr

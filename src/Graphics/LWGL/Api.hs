@@ -24,6 +24,7 @@ module Graphics.LWGL.Api
     , glTexImage2D
     , glTexParameteri
     , glUniform1i
+    , glUniformMatrix4fv
     , glUseProgram
     , glVertexAttribPointer
     ) where
@@ -173,6 +174,13 @@ glTexParameteri textureTarget parameterName parameterValue =
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml>
 glUniform1i :: Location -> Int -> IO ()
 glUniform1i (Location location) = GL.glUniform1i location . fromIntegral
+
+-- | Specify the value of a uniform variable for the current program object.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml>
+glUniformMatrix4fv :: Location -> Int -> Bool -> Ptr GLfloat -> IO ()
+glUniformMatrix4fv (Location location) count transpose ptr =
+    GL.glUniformMatrix4fv location (fromIntegral count) (toBoolean transpose) ptr
 
 -- | Installs a program object as part of current rendering state.
 --
