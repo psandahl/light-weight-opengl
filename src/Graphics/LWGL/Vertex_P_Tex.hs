@@ -11,10 +11,11 @@ module Graphics.LWGL.Vertex_P_Tex
     , makeVertexArrayObject
     ) where
 
-import           Foreign             (Storable (..), castPtr, plusPtr)
-import           Linear              (V2, V3)
+import           Foreign                      (Storable (..), castPtr, plusPtr)
+import           Linear                       (V2, V3)
 
 import           Graphics.LWGL.Api
+import           Graphics.LWGL.ApiConvenience
 import           Graphics.LWGL.Types
 
 -- | A vertex record with two fields, position and texCoord.
@@ -44,7 +45,7 @@ makeVertexArrayObject bufferUsage vertices = do
 
     [vbo] <- glGenBuffers 1
     glBindBuffer ArrayBuffer vbo
-    glBufferDataList ArrayBuffer vertices bufferUsage
+    bufferDataList ArrayBuffer vertices bufferUsage
 
     let v = head vertices
 

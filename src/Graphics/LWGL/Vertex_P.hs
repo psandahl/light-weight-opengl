@@ -11,10 +11,11 @@ module Graphics.LWGL.Vertex_P
     , makeVertexArrayObject
     ) where
 
-import           Foreign             (Storable (..), castPtr)
-import           Linear              (V3)
+import           Foreign                      (Storable (..), castPtr)
+import           Linear                       (V3)
 
 import           Graphics.LWGL.Api
+import           Graphics.LWGL.ApiConvenience
 import           Graphics.LWGL.Types
 
 -- | A vertex record with just one field: position.
@@ -38,7 +39,7 @@ makeVertexArrayObject bufferUsage vertices = do
 
     [vbo] <- glGenBuffers 1
     glBindBuffer ArrayBuffer vbo
-    glBufferDataList ArrayBuffer vertices bufferUsage
+    bufferDataList ArrayBuffer vertices bufferUsage
 
     -- Setting position - three components of type GLfloat
     glEnableVertexAttribArray (AttributeIndex 0)

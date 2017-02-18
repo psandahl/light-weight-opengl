@@ -14,7 +14,6 @@ module Graphics.LWGL.Api
     , glClearColor
     , glClear
     , glBufferData
-    , glBufferDataList
     , glDisableVertexAttribArray
     , glDrawArrays
     , glEnableVertexAttribArray
@@ -29,9 +28,8 @@ module Graphics.LWGL.Api
     , glVertexAttribPointer
     ) where
 
-import           Control.Monad       (unless)
-import           Foreign             (Ptr, Storable, nullPtr, peekArray,
-                                      plusPtr, sizeOf, withArray)
+import           Foreign             (Ptr, nullPtr, peekArray, plusPtr,
+                                      withArray)
 import           Foreign.C           (withCString)
 import qualified Graphics.GL         as GL
 import           Prelude             hiding (toEnum)
@@ -83,16 +81,6 @@ glClear = GL.glClear . combineBits
 glBufferData :: BufferTarget -> Int -> Ptr a -> BufferUsage -> IO ()
 glBufferData bufferTarget size ptr bufferUsage =
     GL.glBufferData (toEnum bufferTarget) (fromIntegral size) ptr (toEnum bufferUsage)
-
--- | Convenice function of 'glBufferData' where data is provided in a list.
-glBufferDataList :: Storable a => BufferTarget -> [a] -> BufferUsage -> IO ()
-glBufferDataList bufferTarget xs bufferUsage =
-    unless (null xs) $
-        withArray xs $ \ptr -> do
-            let first = head xs
-                itemSize = sizeOf first
-                storageSize = itemSize * length xs
-            glBufferData bufferTarget storageSize ptr bufferUsage
 
 -- | Disable a generic vertex attribute array.
 --
