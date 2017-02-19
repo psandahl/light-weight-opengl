@@ -14,6 +14,7 @@ module Graphics.LWGL
 
 import           Graphics.LWGL.Api            as LWGL
 import           Graphics.LWGL.ApiConvenience as LWGL
+import           Graphics.LWGL.Mesh           as LWGL
 import           Graphics.LWGL.Shader         as LWGL
 import           Graphics.LWGL.Texture        as LWGL
 import           Graphics.LWGL.Types          as LWGL

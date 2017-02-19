@@ -20,6 +20,7 @@ library
                        Graphics.LWGL.Vertex_P_Tex
   other-modules:       Graphics.LWGL.Api
                        Graphics.LWGL.ApiConvenience
+                       Graphics.LWGL.Mesh
                        Graphics.LWGL.Shader
                        Graphics.LWGL.Texture
                        Graphics.LWGL.Types

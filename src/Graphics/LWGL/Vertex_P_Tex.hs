@@ -16,6 +16,7 @@ import           Linear                       (V2, V3)
 
 import           Graphics.LWGL.Api
 import           Graphics.LWGL.ApiConvenience
+import           Graphics.LWGL.Mesh
 import           Graphics.LWGL.Types
 
 -- | A vertex record with two fields, position and texCoord.
@@ -34,17 +35,20 @@ instance Storable Vertex where
         poke pPtr $ position v
         poke tPtr $ texCoord v
 
+instance Meshable Vertex where
+    fromList = makeVertexArrayObject
+
 -- | Create a Vertex Array Object, with the specified BufferUsage and the
 -- given vertices. The vertex attributes are populated with position at
 -- (location = 0) and texCoord at (location = 1). At the
 -- return the Vertex Array Object is still bound.
 makeVertexArrayObject :: BufferUsage -> [Vertex] -> IO VertexArrayObject
 makeVertexArrayObject bufferUsage vertices = do
-    [vao] <- glGenVertexArray 1
-    glBindVertexArray vao
+    [vaoId] <- glGenVertexArray 1
+    glBindVertexArray vaoId
 
-    [vbo] <- glGenBuffers 1
-    glBindBuffer ArrayBuffer vbo
+    [vboId] <- glGenBuffers 1
+    glBindBuffer ArrayBuffer vboId
     bufferDataList ArrayBuffer vertices bufferUsage
 
     let v = head vertices
@@ -58,4 +62,4 @@ makeVertexArrayObject bufferUsage vertices = do
     glVertexAttribPointer (AttributeIndex 1) Two GLFloat False
                           (sizeOf v) (sizeOf $ position v)
 
-    return vao
+    return vaoId
