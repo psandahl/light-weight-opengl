@@ -22,8 +22,8 @@ import           Graphics.LWGL.Types
 data TextureFormat = RGB8 | RGBA8
     deriving Show
 
-loadTexture2D :: FilePath -> TextureFormat -> Bool -> IO (Either String Texture)
-loadTexture2D file format _useMipmaps = do
+loadTexture2D :: TextureFormat -> Bool -> FilePath -> IO (Either String Texture)
+loadTexture2D format _useMipmaps file = do
     [texture] <- glGenTextures 1
     glBindTexture Texture2D texture
 
