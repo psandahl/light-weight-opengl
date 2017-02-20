@@ -15,7 +15,9 @@ module Graphics.LWGL.Api
     , glClear
     , glBufferData
     , glDisableVertexAttribArray
+    , glDisable
     , glDrawArrays
+    , glEnable
     , glEnableVertexAttribArray
     , glGenBuffers
     , glGenTextures
@@ -90,6 +92,12 @@ glDisableVertexAttribArray :: AttributeIndex -> IO ()
 glDisableVertexAttribArray (AttributeIndex index) =
     GL.glDisableVertexAttribArray index
 
+-- | Disable server-side GL capabilities.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glEnable.xhtml>
+glDisable :: EnableCapability -> IO ()
+glDisable = GL.glDisable . toEnum
+
 -- | Render primitives from array data.
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml>
@@ -103,6 +111,12 @@ glDrawArrays primitiveType first count =
 glEnableVertexAttribArray :: AttributeIndex -> IO ()
 glEnableVertexAttribArray (AttributeIndex index) =
     GL.glEnableVertexAttribArray index
+
+-- | Enable server-side GL capabilities.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glEnable.xhtml>
+glEnable :: EnableCapability -> IO ()
+glEnable = GL.glEnable . toEnum
 
 -- | Generate buffer object names
 --

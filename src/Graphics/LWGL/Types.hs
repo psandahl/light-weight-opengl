@@ -13,6 +13,7 @@ module Graphics.LWGL.Types
     , BufferUsage (..)
     , ClearBufferMask (..)
     , ComponentCount (..)
+    , EnableCapability (..)
     , Height
     , ImageDetailLevel
     , ImageComponentCount (..)
@@ -152,6 +153,18 @@ instance ToInt ComponentCount where
     toInt Two   = 2
     toInt Three = 3
     toInt Four  = 4
+
+-- | Enable/disable capabilities.
+data EnableCapability
+    = Blend
+    | DepthTest
+    | CullFace
+    deriving Show
+
+instance ToEnum EnableCapability where
+    toEnum Blend     = GL.GL_BLEND
+    toEnum DepthTest = GL.GL_DEPTH_TEST
+    toEnum CullFace  = GL.GL_CULL_FACE
 
 -- | Image height.
 type Height = GLsizei
