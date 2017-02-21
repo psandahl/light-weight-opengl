@@ -13,6 +13,7 @@ module Graphics.LWGL.Api
     , glBindVertexArray
     , glClearColor
     , glClear
+    , glCullFace
     , glBufferData
     , glDisableVertexAttribArray
     , glDisable
@@ -77,6 +78,12 @@ glClearColor = GL.glClearColor
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glClear.xhtml>
 glClear :: [ClearBufferMask] -> IO ()
 glClear = GL.glClear . combineBits
+
+-- | Specify whether front- or back-facing facets can be culled.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glCullFace.xhtml>
+glCullFace :: CullFaceMode -> IO ()
+glCullFace = GL.glCullFace . toEnum
 
 -- | Creates and initializes a buffer object's data store.
 --

@@ -13,6 +13,7 @@ module Graphics.LWGL.Types
     , BufferUsage (..)
     , ClearBufferMask (..)
     , ComponentCount (..)
+    , CullFaceMode (..)
     , EnableCapability (..)
     , Height
     , ImageDetailLevel
@@ -153,6 +154,17 @@ instance ToInt ComponentCount where
     toInt Two   = 2
     toInt Three = 3
     toInt Four  = 4
+
+data CullFaceMode
+    = Front
+    | Back
+    | FrontAndBack
+    deriving Show
+
+instance ToEnum CullFaceMode where
+    toEnum Front        = GL.GL_FRONT
+    toEnum Back         = GL.GL_BACK
+    toEnum FrontAndBack = GL.GL_FRONT_AND_BACK
 
 -- | Enable/disable capabilities.
 data EnableCapability
