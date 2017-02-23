@@ -12,21 +12,25 @@ module Graphics.LWGL.Mesh
     , buildFromList
     ) where
 
-import           Foreign             (Storable)
+import           Data.Vector.Storable (Vector)
+import qualified Data.Vector.Storable as Vec
+import           Foreign              (Storable)
 
 import           Graphics.LWGL.Types
 
 data Mesh = Mesh
     { vao         :: !VertexArrayObject
     , numVertices :: !Int
+    , indices     :: !(Vector GLuint)
     } deriving Show
 
 class Storable a => Meshable a where
     fromList :: BufferUsage -> [a] -> IO VertexArrayObject
 
-buildFromList :: (Storable a, Meshable a) => BufferUsage -> [a] -> IO Mesh
-buildFromList bufferUsage xs = do
-    vaoId <- fromList bufferUsage xs
+buildFromList :: (Storable a, Meshable a) => BufferUsage -> [a] -> [GLuint] -> IO Mesh
+buildFromList bufferUsage vertices indices' = do
+    vaoId <- fromList bufferUsage vertices
     return Mesh { vao         = vaoId
-                , numVertices = length xs
+                , numVertices = length vertices
+                , indices     = Vec.fromList indices'
                 }

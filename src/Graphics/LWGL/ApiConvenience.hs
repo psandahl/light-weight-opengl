@@ -8,13 +8,18 @@
 -- Language: Haskell2010
 module Graphics.LWGL.ApiConvenience
     ( bufferDataList
+    , bufferDataVector
+    , drawTrianglesList
+    , drawTrianglesVector
     , setMatrix4
     ) where
 
-import           Control.Monad       (unless)
-import           Foreign             (Storable (sizeOf), castPtr, with,
-                                      withArray)
-import           Linear              (M44)
+import           Control.Monad        (unless)
+import           Data.Vector.Storable (Vector)
+import qualified Data.Vector.Storable as Vec
+import           Foreign              (Storable (sizeOf), castPtr, with,
+                                       withArray)
+import           Linear               (M44)
 
 import           Graphics.LWGL.Api
 import           Graphics.LWGL.Types
@@ -28,6 +33,34 @@ bufferDataList bufferTarget xs bufferUsage =
                 itemSize = sizeOf first
                 storageSize = itemSize * length xs
             glBufferData bufferTarget storageSize ptr bufferUsage
+
+-- | Convenience function of 'glBufferData' where data is provided in a vector.
+bufferDataVector :: Storable a => BufferTarget -> Vector a -> BufferUsage -> IO ()
+bufferDataVector bufferTarget xs bufferUsage =
+    unless (Vec.null xs) $
+        Vec.unsafeWith xs $ \ptr -> do
+            let first = Vec.head xs
+                itemSize = sizeOf first
+                storageSize = itemSize * Vec.length xs
+            glBufferData bufferTarget storageSize ptr bufferUsage
+
+-- | Convenience function of 'glDrawElements' where triangles are drawn from
+-- from GLuint indices provided in a list.
+drawTrianglesList :: [GLuint] -> IO ()
+drawTrianglesList xs =
+    unless (null xs) $
+        withArray xs $ \ptr -> do
+            let numElems = length xs
+            glDrawElements Triangles numElems IdxUnsignedInt ptr
+
+-- | Convenience function of 'glDrawElements' where triangles are drawn from
+-- from GLuint indices provided in a Vector.
+drawTrianglesVector :: Vector GLuint -> IO ()
+drawTrianglesVector xs =
+    unless (Vec.null xs) $
+        Vec.unsafeWith xs $ \ptr -> do
+            let numElems = Vec.length xs
+            glDrawElements Triangles numElems IdxUnsignedInt ptr
 
 -- | Set a M44 uniform value.
 setMatrix4 :: Location -> M44 GLfloat -> IO ()

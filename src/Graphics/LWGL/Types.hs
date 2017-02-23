@@ -14,6 +14,7 @@ module Graphics.LWGL.Types
     , ClearBufferMask (..)
     , ComponentCount (..)
     , CullFaceMode (..)
+    , DrawElementsType (..)
     , EnableCapability (..)
     , Height
     , ImageDetailLevel
@@ -165,6 +166,18 @@ instance ToEnum CullFaceMode where
     toEnum Front        = GL.GL_FRONT
     toEnum Back         = GL.GL_BACK
     toEnum FrontAndBack = GL.GL_FRONT_AND_BACK
+
+-- | Enumeration of index types at drawElements.
+data DrawElementsType
+    = IdxUnsignedByte
+    | IdxUnsignedShort
+    | IdxUnsignedInt
+    deriving Show
+
+instance ToEnum DrawElementsType where
+    toEnum IdxUnsignedByte  = GL.GL_UNSIGNED_BYTE
+    toEnum IdxUnsignedShort = GL.GL_UNSIGNED_SHORT
+    toEnum IdxUnsignedInt   = GL.GL_UNSIGNED_INT
 
 -- | Enable/disable capabilities.
 data EnableCapability

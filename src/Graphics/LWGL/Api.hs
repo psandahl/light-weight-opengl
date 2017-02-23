@@ -18,6 +18,7 @@ module Graphics.LWGL.Api
     , glDisableVertexAttribArray
     , glDisable
     , glDrawArrays
+    , glDrawElements
     , glEnable
     , glEnableVertexAttribArray
     , glGenBuffers
@@ -111,6 +112,13 @@ glDisable = GL.glDisable . toEnum
 glDrawArrays :: PrimitiveType -> Int -> Int -> IO ()
 glDrawArrays primitiveType first count =
     GL.glDrawArrays (toEnum primitiveType) (fromIntegral first) (fromIntegral count)
+
+-- | Render primitives from array data.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDrawElements.xhtml>
+glDrawElements :: PrimitiveType -> Int -> DrawElementsType -> Ptr a -> IO ()
+glDrawElements primitiveType count drawElementsType =
+    GL.glDrawElements (toEnum primitiveType) (fromIntegral count) (toEnum drawElementsType)
 
 -- | Enable a generic vertex attribute array.
 --
