@@ -13,7 +13,6 @@ module Graphics.LWGL.Types
     , BufferUsage (..)
     , ClearBufferMask (..)
     , ComponentCount (..)
-    , CullFaceMode (..)
     , DrawElementsType (..)
     , EnableCapability (..)
     , Height
@@ -23,6 +22,8 @@ module Graphics.LWGL.Types
     , ShaderType (..)
     , PixelFormat (..)
     , PixelType (..)
+    , PolygonFace (..)
+    , PolygonMode (..)
     , PrimitiveType (..)
     , Program (..)
     , Texture (..)
@@ -156,17 +157,6 @@ instance ToInt ComponentCount where
     toInt Three = 3
     toInt Four  = 4
 
-data CullFaceMode
-    = Front
-    | Back
-    | FrontAndBack
-    deriving Show
-
-instance ToEnum CullFaceMode where
-    toEnum Front        = GL.GL_FRONT
-    toEnum Back         = GL.GL_BACK
-    toEnum FrontAndBack = GL.GL_FRONT_AND_BACK
-
 -- | Enumeration of index types at drawElements.
 data DrawElementsType
     = IdxUnsignedByte
@@ -270,6 +260,28 @@ instance ToEnum PixelType where
     toEnum PxlUnsignedShort = GL.GL_UNSIGNED_SHORT
     toEnum PxlShort         = GL.GL_SHORT
     toEnum PxlFloat         = GL.GL_FLOAT
+
+data PolygonFace
+    = Front
+    | Back
+    | FrontAndBack
+    deriving Show
+
+instance ToEnum PolygonFace where
+    toEnum Front        = GL.GL_FRONT
+    toEnum Back         = GL.GL_BACK
+    toEnum FrontAndBack = GL.GL_FRONT_AND_BACK
+
+data PolygonMode
+    = Fill
+    | Line
+    | Point
+    deriving Show
+
+instance ToEnum PolygonMode where
+    toEnum Fill  = GL.GL_FILL
+    toEnum Line  = GL.GL_LINE
+    toEnum Point = GL.GL_POINT
 
 -- | Enumeration of primitive render types.
 data PrimitiveType

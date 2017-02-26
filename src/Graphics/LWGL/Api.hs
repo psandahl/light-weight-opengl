@@ -25,6 +25,7 @@ module Graphics.LWGL.Api
     , glGenTextures
     , glGenVertexArray
     , glGetUniformLocation
+    , glPolygonMode
     , glTexImage2D
     , glTexParameteri
     , glUniform1i
@@ -83,7 +84,7 @@ glClear = GL.glClear . combineBits
 -- | Specify whether front- or back-facing facets can be culled.
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glCullFace.xhtml>
-glCullFace :: CullFaceMode -> IO ()
+glCullFace :: PolygonFace -> IO ()
 glCullFace = GL.glCullFace . toEnum
 
 -- | Creates and initializes a buffer object's data store.
@@ -170,6 +171,12 @@ glGetUniformLocation :: Program -> String -> IO Location
 glGetUniformLocation (Program program) name =
     withCString name $ \cstring ->
         Location <$> GL.glGetUniformLocation program cstring
+
+-- | Select a polygon rasterization mode.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonMode.xhtml>
+glPolygonMode :: PolygonFace -> PolygonMode -> IO ()
+glPolygonMode face = GL.glPolygonMode (toEnum face) . toEnum
 
 -- | Specify a two-dimensional texture image.
 --
