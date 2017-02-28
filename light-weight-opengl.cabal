@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Graphics.LWGL
                        Graphics.LWGL.Vertex_P
+                       Graphics.LWGL.Vertex_P_Norm_Tex
                        Graphics.LWGL.Vertex_P_Tex
   other-modules:       Graphics.LWGL.Api
                        Graphics.LWGL.ApiConvenience
