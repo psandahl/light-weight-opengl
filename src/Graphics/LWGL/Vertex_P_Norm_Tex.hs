@@ -29,8 +29,18 @@ instance Storable Vertex where
     sizeOf v = (sizeOf $ position v) +
                (sizeOf $ normal v) +
                (sizeOf $ texCoord v)
+
     alignment v = alignment $ position v
-    peek = error "Not implemented"
+
+    peek ptr = do
+        let pPtr = castPtr ptr
+        pos <- peek pPtr
+        let nPtr = castPtr $ pPtr `plusPtr` (sizeOf pos)
+        norm <- peek nPtr
+        let tPtr = castPtr $ nPtr `plusPtr` (sizeOf norm)
+        tex <- peek tPtr
+        return $ Vertex {position = pos, normal = norm, texCoord = tex}
+
     poke ptr v = do
         let pPtr = castPtr ptr
             nPtr = castPtr $ ptr `plusPtr` (sizeOf $ position v)
