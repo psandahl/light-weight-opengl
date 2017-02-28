@@ -11,11 +11,11 @@ module Graphics.LWGL.Vertex_P
     , makeVertexArrayObject
     ) where
 
-import           Foreign                      (Storable (..), castPtr)
-import           Linear                       (V3)
+import           Control.Monad       (void)
+import           Foreign             (Storable (..), castPtr)
+import           Linear              (V3)
 
 import           Graphics.LWGL.Api
-import           Graphics.LWGL.ApiConvenience
 import           Graphics.LWGL.Mesh
 import           Graphics.LWGL.Types
 
@@ -31,19 +31,23 @@ instance Storable Vertex where
     poke ptr v = poke (castPtr ptr) $ position v
 
 instance Meshable Vertex where
-    fromList = makeVertexArrayObject
+    fromList bufferUsage =
+        makeVertexArrayObject . setBufferFromList bufferUsage
+
+    fromVector bufferUsage =
+        makeVertexArrayObject . setBufferFromVector bufferUsage
 
 -- | Create a Vertex Array Object, with the specified BufferUsage and the
 -- given vertices. The vertex attributes are populated (location = 0). At the
 -- return the Vertex Array Object is still bound.
-makeVertexArrayObject :: BufferUsage -> [Vertex] -> IO VertexArrayObject
-makeVertexArrayObject bufferUsage vertices = do
+makeVertexArrayObject :: IO Vertex -> IO VertexArrayObject
+makeVertexArrayObject setBuffer = do
     [vaoId] <- glGenVertexArray 1
     glBindVertexArray vaoId
 
     [vboId] <- glGenBuffers 1
     glBindBuffer ArrayBuffer vboId
-    bufferDataList ArrayBuffer vertices bufferUsage
+    void $ setBuffer
 
     -- Setting position - three components of type GLfloat
     glEnableVertexAttribArray (AttributeIndex 0)
