@@ -12,6 +12,7 @@ module Graphics.LWGL.ApiConvenience
     , drawTrianglesList
     , drawTrianglesVector
     , setMatrix4
+    , setVector3
     ) where
 
 import           Control.Monad        (unless)
@@ -19,7 +20,7 @@ import           Data.Vector.Storable (Vector)
 import qualified Data.Vector.Storable as Vec
 import           Foreign              (Storable (sizeOf), castPtr, with,
                                        withArray)
-import           Linear               (M44)
+import           Linear               (M44, V3)
 
 import           Graphics.LWGL.Api
 import           Graphics.LWGL.Types
@@ -66,3 +67,8 @@ drawTrianglesVector xs =
 setMatrix4 :: Location -> M44 GLfloat -> IO ()
 setMatrix4 location matrix =
     with matrix $ glUniformMatrix4fv location 1 True . castPtr
+
+-- | Set a V3 uniform value.
+setVector3 :: Location -> V3 GLfloat -> IO ()
+setVector3 location vector =
+    with vector $ glUniform3fv location 1 . castPtr
