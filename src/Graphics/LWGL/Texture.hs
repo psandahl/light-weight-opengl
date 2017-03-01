@@ -23,7 +23,7 @@ data TextureFormat = RGB8 | RGBA8
     deriving Show
 
 loadTexture2D :: TextureFormat -> Bool -> FilePath -> IO (Either String Texture)
-loadTexture2D format _useMipmaps file = do
+loadTexture2D format useMipmaps file = do
     [texture] <- glGenTextures 1
     glBindTexture Texture2D texture
 
@@ -32,8 +32,15 @@ loadTexture2D format _useMipmaps file = do
         Right () -> do
             glTexParameteri Texture2D TextureWrapS GLRepeat
             glTexParameteri Texture2D TextureWrapT GLRepeat
-            glTexParameteri Texture2D TextureMinFilter GLLinear
-            glTexParameteri Texture2D TextureMagFilter GLLinear
+
+            if useMipmaps
+                then do
+                    glGenerateMipmap Texture2D
+                    glTexParameteri Texture2D TextureMinFilter GLLinearMipmapLinear
+                    glTexParameteri Texture2D TextureMagFilter GLLinear
+                else do
+                    glTexParameteri Texture2D TextureMinFilter GLLinear
+                    glTexParameteri Texture2D TextureMagFilter GLLinear
 
             return $ Right texture
 

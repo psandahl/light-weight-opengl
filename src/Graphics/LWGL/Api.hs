@@ -19,8 +19,9 @@ module Graphics.LWGL.Api
     , glDisable
     , glDrawArrays
     , glDrawElements
-    , glEnable
     , glEnableVertexAttribArray
+    , glEnable
+    , glGenerateMipmap
     , glGenBuffers
     , glGenTextures
     , glGenVertexArray
@@ -134,6 +135,12 @@ glEnableVertexAttribArray (AttributeIndex index) =
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glEnable.xhtml>
 glEnable :: EnableCapability -> IO ()
 glEnable = GL.glEnable . toEnum
+
+-- | Generate mipmaps for a specified texture object.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenerateMipmap.xhtml>
+glGenerateMipmap :: TextureTarget -> IO ()
+glGenerateMipmap = GL.glGenerateMipmap . toEnum
 
 -- | Generate buffer object names
 --

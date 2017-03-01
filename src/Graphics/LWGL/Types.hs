@@ -337,12 +337,14 @@ data TextureParameterValue
     = GLLinear
     | GLNearest
     | GLRepeat
+    | GLLinearMipmapLinear
     deriving Show
 
 instance ToInt TextureParameterValue where
-    toInt GLLinear  = fromIntegral GL.GL_LINEAR
-    toInt GLNearest = fromIntegral GL.GL_LINEAR
-    toInt GLRepeat  = fromIntegral GL.GL_REPEAT
+    toInt GLLinear             = fromIntegral GL.GL_LINEAR
+    toInt GLNearest            = fromIntegral GL.GL_LINEAR
+    toInt GLRepeat             = fromIntegral GL.GL_REPEAT
+    toInt GLLinearMipmapLinear = fromIntegral GL.GL_LINEAR_MIPMAP_LINEAR
 
 -- | Representation of a texture unit.
 newtype TextureUnit = TextureUnit GLuint
