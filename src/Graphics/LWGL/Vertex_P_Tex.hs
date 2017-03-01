@@ -25,20 +25,20 @@ data Vertex = Vertex
     } deriving Show
 
 instance Storable Vertex where
-    sizeOf v = (sizeOf $ position v) + (sizeOf $ texCoord v)
+    sizeOf v = sizeOf (position v) + sizeOf (texCoord v)
 
     alignment v = alignment $ position v
 
     peek ptr = do
         let pPtr = castPtr ptr
         pos <- peek pPtr
-        let tPtr = castPtr $ pPtr `plusPtr` (sizeOf pos)
+        let tPtr = castPtr $ pPtr `plusPtr` sizeOf pos
         tex <- peek tPtr
-        return $ Vertex {position = pos, texCoord = tex}
+        return Vertex {position = pos, texCoord = tex}
 
     poke ptr v = do
         let pPtr = castPtr ptr
-            tPtr = castPtr $ ptr `plusPtr` (sizeOf $ position v)
+            tPtr = castPtr $ ptr `plusPtr` sizeOf (position v)
         poke pPtr $ position v
         poke tPtr $ texCoord v
 

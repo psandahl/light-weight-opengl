@@ -200,9 +200,9 @@ glTexImage2D :: TextureTarget
              -> Ptr a
              -> IO ()
 glTexImage2D textureTarget detailLevel componentCount
-             width height format type_ ptr =
+             width height format type_ =
     GL.glTexImage2D (toEnum textureTarget) detailLevel (toInt componentCount)
-                    width height 0 (toEnum format) (toEnum type_) ptr
+                    width height 0 (toEnum format) (toEnum type_)
 
 -- | Set texture parameters.
 --
@@ -230,8 +230,8 @@ glUniform3fv (Location location) count =
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml>
 glUniformMatrix4fv :: Location -> Int -> Bool -> Ptr GLfloat -> IO ()
-glUniformMatrix4fv (Location location) count transpose ptr =
-    GL.glUniformMatrix4fv location (fromIntegral count) (toBoolean transpose) ptr
+glUniformMatrix4fv (Location location) count transpose =
+    GL.glUniformMatrix4fv location (fromIntegral count) (toBoolean transpose)
 
 -- | Installs a program object as part of current rendering state.
 --

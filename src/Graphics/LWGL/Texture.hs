@@ -79,7 +79,7 @@ loadImage2DRGBA8 file = do
         Left err -> return $ Left err
 
 readImageRGB8 :: FilePath -> IO (Either String (Image PixelRGB8))
-readImageRGB8 file = (fmap convertRGB8) <$> readImage file
+readImageRGB8 file = fmap convertRGB8 <$> readImage file
 
 readImageRGBA8 :: FilePath -> IO (Either String (Image PixelRGBA8))
-readImageRGBA8 file = (fmap convertRGBA8) <$> readImage file
+readImageRGBA8 file = fmap convertRGBA8 <$> readImage file

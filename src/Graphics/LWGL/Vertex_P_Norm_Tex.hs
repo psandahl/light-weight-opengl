@@ -26,25 +26,25 @@ data Vertex = Vertex
     } deriving Show
 
 instance Storable Vertex where
-    sizeOf v = (sizeOf $ position v) +
-               (sizeOf $ normal v) +
-               (sizeOf $ texCoord v)
+    sizeOf v = sizeOf (position v) +
+               sizeOf (normal v) +
+               sizeOf (texCoord v)
 
     alignment v = alignment $ position v
 
     peek ptr = do
         let pPtr = castPtr ptr
         pos <- peek pPtr
-        let nPtr = castPtr $ pPtr `plusPtr` (sizeOf pos)
+        let nPtr = castPtr $ pPtr `plusPtr` sizeOf pos
         norm <- peek nPtr
-        let tPtr = castPtr $ nPtr `plusPtr` (sizeOf norm)
+        let tPtr = castPtr $ nPtr `plusPtr` sizeOf norm
         tex <- peek tPtr
-        return $ Vertex {position = pos, normal = norm, texCoord = tex}
+        return Vertex {position = pos, normal = norm, texCoord = tex}
 
     poke ptr v = do
         let pPtr = castPtr ptr
-            nPtr = castPtr $ ptr `plusPtr` (sizeOf $ position v)
-            tPtr = castPtr $ nPtr `plusPtr` (sizeOf $ normal v)
+            nPtr = castPtr $ ptr `plusPtr` sizeOf (position v)
+            tPtr = castPtr $ nPtr `plusPtr` sizeOf (normal v)
         poke pPtr $ position v
         poke nPtr $ normal v
         poke tPtr $ texCoord v
@@ -76,11 +76,11 @@ makeVertexArrayObject setBuffer = do
     -- Setting normal - three components of type GLfloat.
     glEnableVertexAttribArray (AttributeIndex 1)
     glVertexAttribPointer (AttributeIndex 1) Three GLFloat False
-                          (sizeOf v) $ (sizeOf $ position v)
+                          (sizeOf v) (sizeOf $ position v)
 
     -- Setting texCoord - two components of type GLfloat.
     glEnableVertexAttribArray (AttributeIndex 2)
     glVertexAttribPointer (AttributeIndex 2) Two GLFloat False
-                          (sizeOf v) $ (sizeOf $ position v) + (sizeOf $ normal v)
+                          (sizeOf v) $ sizeOf (position v) + sizeOf (normal v)
 
     return vaoId

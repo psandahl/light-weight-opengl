@@ -27,7 +27,7 @@ data Vertex = Vertex
 instance Storable Vertex where
     sizeOf v = sizeOf $ position v
     alignment v = alignment $ position v
-    peek ptr = Vertex <$> (peek $ castPtr ptr)
+    peek ptr = Vertex <$> peek (castPtr ptr)
     poke ptr v = poke (castPtr ptr) $ position v
 
 instance Meshable Vertex where
@@ -47,7 +47,7 @@ makeVertexArrayObject setBuffer = do
 
     [vboId] <- glGenBuffers 1
     glBindBuffer ArrayBuffer vboId
-    void $ setBuffer
+    void setBuffer
 
     -- Setting position - three components of type GLfloat
     glEnableVertexAttribArray (AttributeIndex 0)
