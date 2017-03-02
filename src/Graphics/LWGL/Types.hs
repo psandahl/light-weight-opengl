@@ -174,12 +174,14 @@ data EnableCapability
     = Blend
     | DepthTest
     | CullFace
+    | ProgramPointSize
     deriving Show
 
 instance ToEnum EnableCapability where
-    toEnum Blend     = GL.GL_BLEND
-    toEnum DepthTest = GL.GL_DEPTH_TEST
-    toEnum CullFace  = GL.GL_CULL_FACE
+    toEnum Blend            = GL.GL_BLEND
+    toEnum DepthTest        = GL.GL_DEPTH_TEST
+    toEnum CullFace         = GL.GL_CULL_FACE
+    toEnum ProgramPointSize = GL.GL_PROGRAM_POINT_SIZE
 
 -- | Image height.
 type Height = GLsizei
