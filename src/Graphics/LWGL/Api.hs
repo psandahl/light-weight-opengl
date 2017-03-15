@@ -33,6 +33,7 @@ module Graphics.LWGL.Api
     , glUniform3fv
     , glUniformMatrix4fv
     , glUseProgram
+    , glViewport
     , glVertexAttribPointer
     ) where
 
@@ -238,6 +239,14 @@ glUniformMatrix4fv (Location location) count transpose =
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glUseProgram.xml>
 glUseProgram :: Program -> IO ()
 glUseProgram (Program program) = GL.glUseProgram program
+
+-- | Set the viewport
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glViewport.xhtml>
+glViewport :: Int -> Int -> Int -> Int -> IO ()
+glViewport x y width height =
+    GL.glViewport (fromIntegral x) (fromIntegral y)
+                  (fromIntegral width) (fromIntegral height)
 
 -- | Define an array of generic vertex attribute data.
 --
