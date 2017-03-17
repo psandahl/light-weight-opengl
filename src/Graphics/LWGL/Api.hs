@@ -29,6 +29,7 @@ module Graphics.LWGL.Api
     , glPolygonMode
     , glTexImage2D
     , glTexParameteri
+    , glUniform1f
     , glUniform1i
     , glUniform3fv
     , glUniformMatrix4fv
@@ -213,6 +214,12 @@ glTexParameteri :: TextureTarget -> TextureParameterName
 glTexParameteri textureTarget parameterName parameterValue =
     GL.glTexParameteri (toEnum textureTarget) (toEnum parameterName)
                        (toInt parameterValue)
+
+-- | Specify the value of a uniform variable for the current program object.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml>
+glUniform1f :: Location -> Float -> IO ()
+glUniform1f (Location location) = GL.glUniform1f location
 
 -- | Specify the value of a uniform variable for the current program object.
 --
