@@ -13,8 +13,12 @@ module Graphics.LWGL.Types
     , BufferUsage (..)
     , ClearBufferMask (..)
     , ComponentCount (..)
+    , DrawBufferMode (..)
     , DrawElementsType (..)
     , EnableCapability (..)
+    , FrameBuffer (..)
+    , FrameBufferAttachment (..)
+    , FrameBufferTarget (..)
     , Height
     , ImageDetailLevel
     , ImageComponentCount (..)
@@ -157,6 +161,13 @@ instance ToInt ComponentCount where
     toInt Three = 3
     toInt Four  = 4
 
+data DrawBufferMode
+    = DrawNone
+    deriving Show
+
+instance ToEnum DrawBufferMode where
+    toEnum DrawNone = GL.GL_NONE
+
 -- | Enumeration of index types at drawElements.
 data DrawElementsType
     = IdxUnsignedByte
@@ -182,6 +193,30 @@ instance ToEnum EnableCapability where
     toEnum DepthTest        = GL.GL_DEPTH_TEST
     toEnum CullFace         = GL.GL_CULL_FACE
     toEnum ProgramPointSize = GL.GL_PROGRAM_POINT_SIZE
+
+-- | Representation of a FrameBuffer.
+newtype FrameBuffer = FrameBuffer GLuint
+    deriving Show
+
+-- | Representation of framebuffer target.
+data FrameBufferTarget
+    = GLFrameBuffer
+    | GLReadFrameBuffer
+    | GLDrawFrameBuffer
+    deriving Show
+
+instance ToEnum FrameBufferTarget where
+    toEnum GLFrameBuffer     = GL.GL_FRAMEBUFFER
+    toEnum GLReadFrameBuffer = GL.GL_READ_FRAMEBUFFER
+    toEnum GLDrawFrameBuffer = GL.GL_DRAW_FRAMEBUFFER
+
+-- | Representation of framebuffer attachement.
+data FrameBufferAttachment
+    = GLDepthAttachment
+    deriving Show
+
+instance ToEnum FrameBufferAttachment where
+    toEnum GLDepthAttachment = GL.GL_DEPTH_ATTACHMENT
 
 -- | Image height.
 type Height = GLsizei
@@ -237,15 +272,17 @@ data PixelFormat
     | PxlBGR
     | PxlRGBA
     | PxlBGRA
+    | PxlDepthComponent
     deriving Show
 
 instance ToEnum PixelFormat where
-    toEnum PxlRed  = GL.GL_RED
-    toEnum PxlRG   = GL.GL_RG
-    toEnum PxlRGB  = GL.GL_RGB
-    toEnum PxlBGR  = GL.GL_BGR
-    toEnum PxlRGBA = GL.GL_RGBA
-    toEnum PxlBGRA = GL.GL_BGRA
+    toEnum PxlRed            = GL.GL_RED
+    toEnum PxlRG             = GL.GL_RG
+    toEnum PxlRGB            = GL.GL_RGB
+    toEnum PxlBGR            = GL.GL_BGR
+    toEnum PxlRGBA           = GL.GL_RGBA
+    toEnum PxlBGRA           = GL.GL_BGRA
+    toEnum PxlDepthComponent = GL.GL_DEPTH_COMPONENT
 
 -- | Pixel type enumeration.
 data PixelType
@@ -313,6 +350,10 @@ instance ToEnum PrimitiveType where
     toEnum TriangleStrip          = GL.GL_TRIANGLE_STRIP
     toEnum TriangleStripAdjacency = GL.GL_TRIANGLE_STRIP_ADJACENCY
 
+data ReadBufferMode
+    = ReadNone
+    deriving Show
+
 -- | Representation of a linked shader program.
 newtype Program = Program GLuint
     deriving Show
@@ -340,6 +381,7 @@ data TextureParameterValue
     | GLNearest
     | GLRepeat
     | GLLinearMipmapLinear
+    | GLClampToEdge
     deriving Show
 
 instance ToInt TextureParameterValue where
@@ -347,6 +389,7 @@ instance ToInt TextureParameterValue where
     toInt GLNearest            = fromIntegral GL.GL_LINEAR
     toInt GLRepeat             = fromIntegral GL.GL_REPEAT
     toInt GLLinearMipmapLinear = fromIntegral GL.GL_LINEAR_MIPMAP_LINEAR
+    toInt GLClampToEdge        = fromIntegral GL.GL_CLAMP_TO_EDGE
 
 -- | Representation of a texture unit.
 newtype TextureUnit = TextureUnit GLuint

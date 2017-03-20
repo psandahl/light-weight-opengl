@@ -9,6 +9,7 @@
 module Graphics.LWGL.Api
     ( glActiveTexture
     , glBindBuffer
+    , glBindFramebuffer
     , glBindTexture
     , glBindVertexArray
     , glClearColor
@@ -18,11 +19,14 @@ module Graphics.LWGL.Api
     , glDisableVertexAttribArray
     , glDisable
     , glDrawArrays
+    , glDrawBuffer
     , glDrawElements
     , glEnableVertexAttribArray
     , glEnable
+    , glFramebufferTexture2D
     , glGenerateMipmap
     , glGenBuffers
+    , glGenFramebuffers
     , glGenTextures
     , glGenVertexArray
     , glGetUniformLocation
@@ -58,6 +62,13 @@ glActiveTexture = GL.glActiveTexture . toEnum
 glBindBuffer :: BufferTarget -> BufferObject -> IO ()
 glBindBuffer bufferTarget (BufferObject bufferObject) =
     GL.glBindBuffer (toEnum bufferTarget) bufferObject
+
+-- | Bind a framebuffer to a framebuffer target
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindFramebuffer.xhtml>
+glBindFramebuffer :: FrameBufferTarget -> FrameBuffer -> IO ()
+glBindFramebuffer bufferTarget (FrameBuffer frameBuffer) =
+    GL.glBindFramebuffer (toEnum bufferTarget) frameBuffer
 
 -- | Bind a named texture to a texturing target.
 --
@@ -118,6 +129,12 @@ glDrawArrays :: PrimitiveType -> Int -> Int -> IO ()
 glDrawArrays primitiveType first count =
     GL.glDrawArrays (toEnum primitiveType) (fromIntegral first) (fromIntegral count)
 
+-- | Specify which color buffers are to be drawn into.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDrawBuffer.xhtml>
+glDrawBuffer :: DrawBufferMode -> IO ()
+glDrawBuffer = GL.glDrawBuffer . toEnum
+
 -- | Render primitives from array data.
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDrawElements.xhtml>
@@ -138,6 +155,16 @@ glEnableVertexAttribArray (AttributeIndex index) =
 glEnable :: EnableCapability -> IO ()
 glEnable = GL.glEnable . toEnum
 
+-- | Attach a level of a texture object as a logical buffer of a framebuffer object.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glFramebufferTexture.xhtml>
+glFramebufferTexture2D :: FrameBufferTarget -> FrameBufferAttachment
+                       -> TextureTarget -> Texture -> Int -> IO ()
+glFramebufferTexture2D bufferTarget bufferAttachment textureTarget
+                       (Texture texture) level =
+    GL.glFramebufferTexture2D (toEnum bufferTarget) (toEnum bufferAttachment)
+                              (toEnum textureTarget) texture (fromIntegral level)
+
 -- | Generate mipmaps for a specified texture object.
 --
 -- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenerateMipmap.xhtml>
@@ -153,6 +180,16 @@ glGenBuffers num = do
     withArray array $ \ptr -> do
         GL.glGenBuffers (fromIntegral num) ptr
         map BufferObject <$> peekArray num ptr
+
+-- | Generate framebuffer object names.
+--
+-- See <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenFramebuffers.xhtml>
+glGenFramebuffers :: Int -> IO [FrameBuffer]
+glGenFramebuffers num = do
+    let array = replicate num 0
+    withArray array $ \ptr -> do
+        GL.glGenFramebuffers (fromIntegral num) ptr
+        map FrameBuffer <$> peekArray num ptr
 
 -- | Generate texture names.
 --
