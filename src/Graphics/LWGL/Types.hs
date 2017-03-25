@@ -185,6 +185,7 @@ data EnableCapability
     = Blend
     | DepthTest
     | CullFace
+    | MultiSample
     | ProgramPointSize
     deriving Show
 
@@ -192,6 +193,7 @@ instance ToEnum EnableCapability where
     toEnum Blend            = GL.GL_BLEND
     toEnum DepthTest        = GL.GL_DEPTH_TEST
     toEnum CullFace         = GL.GL_CULL_FACE
+    toEnum MultiSample      = GL.GL_MULTISAMPLE
     toEnum ProgramPointSize = GL.GL_PROGRAM_POINT_SIZE
 
 -- | Representation of a FrameBuffer.
